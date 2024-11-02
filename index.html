@@ -7,10 +7,20 @@
     <style>
         body { font-family: Arial, sans-serif; }
         label, select, button { margin-top: 10px; }
+        .add-button { background-color: green; color: white; padding: 5px 10px; border: none; cursor: pointer; }
+        .remove-button { background-color: red; color: white; padding: 5px 10px; border: none; cursor: pointer; }
+        .remove-button:hover { background-color: darkred; }
+        .add-button:hover { background-color: darkgreen; }
     </style>
 </head>
 <body>
     <h1>Sátor Számoló</h1>
+    <label for="tentType">Sátor típusa:</label>
+    <select id="tentType">
+        <option value="standard">Standard</option>
+        <option value="magaslabas">Magaslábas</option>
+    </select>
+
     <label for="product">Válassz egy sátrat:</label>
     <select id="product">
         <option value="">-- Válassz --</option>
@@ -24,45 +34,116 @@
 		<option value="18,18,16,4,2,2,18,8,4,4,8,10,1">400 négyzetméteres sátor</option>
 		<option value="20,20,18,4,2,2,20,9,4,4,9,11,1">450 négyzetméteres sátor</option>
 		<option value="22,22,20,4,2,2,22,10,6,6,10,12,1">500 négyzetméteres sátor</option>
-		
     </select>
 
     <label for="quantity">Mennyiség:</label>
     <input type="number" id="quantity" value="1" min="1">
 
-    <button onclick="calculate()">Számolás</button>
+    <button class="add-button" onclick="addTent()">Hozzáadás</button>
+
+    <h2>Sátor lista</h2>
+    <ul id="tentList"></ul>
+
+    <button onclick="calculate()">Összesítés</button>
 
     <h2 id="result"></h2>
 
     <script>
-        function calculate() {
+        const tents = [];
+
+        function addTent() {
+            const tentType = document.getElementById('tentType').value;
             const selectedProduct = document.getElementById('product').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
 
             if (!selectedProduct) {
-                document.getElementById('result').innerText = "Kérlek válassz egy sátrat!";
+                alert("Kérlek válassz egy sátrat!");
                 return;
             }
 
-            const [g, l, c, z, x, y, v, m, k, n, j, h, d] = selectedProduct.split(','); // A sátor összes eleme
-            const quantity = parseInt(document.getElementById('quantity').value);
+            const tentData = {
+                id: Date.now(), // Unique ID for each tent added, to enable removal
+                tentType,
+                values: selectedProduct.split(','),
+                quantity
+            };
 
-            const totalG = g * quantity;
-            const totalL = l * quantity;
-            const totalC = c * quantity;
-            const totalZ = z * quantity;
-            const totalX = x * quantity;
-            const totalY = y * quantity;
-            const totalV = v * quantity;
-            const totalM = m * quantity;
-            const totalK = k * quantity; // Andrásvas
-			const totalN = n * quantity;
-            const totalJ = j * quantity; // Tetőponyva
-            const totalH = h * quantity; // Oldalponyva
-            const totalD = d * quantity; // Háromszögponyva
-			
+            tents.push(tentData);
+            updateTentList();
+        }
 
-            document.getElementById('result').innerText = 
-                `${quantity} db sátorhoz szükséges:\nGerinc: ${totalG} db\nLáb: ${totalL} db\nPárkány: ${totalC} db\nVégponyvatartó: ${totalZ} db\nKözépsőláb: ${totalX} db\nKözépsőtalp: ${totalY} db\nSimatalp: ${totalV} db\nFogás piszka: ${totalM} db\nAndrásvas: ${totalK} db\nFogás Drótkötél: ${totalN} db\nTetőponyva: ${totalJ} db\nFogás Oldalponyva: ${totalH} db\nFogás Háromszögponyva: ${totalD} db`;
+        function updateTentList() {
+            const tentList = document.getElementById('tentList');
+            tentList.innerHTML = '';
+
+            tents.forEach(tent => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${tent.tentType === 'magaslabas' ? 'Magaslábas' : 'Standard'} - ${tent.quantity} db`;
+                
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Eltávolítás';
+                removeButton.classList.add('remove-button');
+                removeButton.onclick = () => removeTent(tent.id);
+                
+                listItem.appendChild(removeButton);
+                tentList.appendChild(listItem);
+            });
+        }
+
+        function removeTent(id) {
+            const index = tents.findIndex(tent => tent.id === id);
+            if (index !== -1) tents.splice(index, 1);
+            updateTentList();
+        }
+
+        function calculate() {
+            let totalG = 0, totalStandardL = 0, totalMagasL = 0, totalC = 0, totalZ = 0;
+            let totalX = 0, totalMagasX = 0, totalY = 0, totalV = 0, totalM = 0;
+            let totalK = 0, totalN = 0, totalJ = 0, totalH = 0, totalD = 0;
+
+            tents.forEach(tent => {
+                const [g, l, c, z, x, y, v, m, k, n, j, h, d] = tent.values.map(Number);
+                const quantity = tent.quantity;
+
+                totalG += g * quantity;
+                totalC += c * quantity;
+                totalZ += z * quantity;
+                totalY += y * quantity;
+                totalV += v * quantity;
+                totalM += m * quantity;
+                totalK += k * quantity;
+                totalN += n * quantity;
+                totalJ += j * quantity;
+                totalH += h * quantity;
+                totalD += d * quantity;
+
+                if (tent.tentType === 'magaslabas') {
+                    totalMagasL += l * quantity;
+                    totalMagasX += x * quantity;
+                } else {
+                    totalStandardL += l * quantity;
+                    totalX += x * quantity;
+                }
+            });
+
+            document.getElementById('result').innerText = `
+                Szükséges elemek:
+                Gerinc: ${totalG} db
+                ${totalStandardL > 0 ? `Sima láb: ${totalStandardL} db` : ''}
+                ${totalMagasL > 0 ? `Magasláb: ${totalMagasL} db` : ''}
+                Párkány: ${totalC} db
+                Végponyvatartó: ${totalZ} db
+                ${totalX > 0 ? `Sima Középsőláb: ${totalX} db` : ''}
+                ${totalMagasX > 0 ? `Magas középsőláb: ${totalMagasX} db` : ''}
+                Középsőtalp: ${totalY} db
+                Simatalp: ${totalV} db
+                Fogás piszka: ${totalM} db
+                Andrásvas: ${totalK} db
+                Fogás Drótkötél: ${totalN} db
+                Tetőponyva: ${totalJ} db
+                Fogás Oldalponyva: ${totalH} db
+                Fogás Háromszögponyva: ${totalD} db
+            `;
         }
     </script>
 </body>
