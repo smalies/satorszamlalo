@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sátor Számoló</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        label, select, button { margin-top: 10px; }
+        .add-button { background-color: green; color: white; padding: 5px 10px; border: none; cursor: pointer; }
+        .remove-button { background-color: red; color: white; padding: 5px 10px; border: none; cursor: pointer; }
+        .remove-button:hover { background-color: darkred; }
+        .add-button:hover { background-color: darkgreen; }
+    </style>
+</head>
+<body>
+    <h1>Sátor Számoló</h1>
+    <label for="tentType">Sátor típusa:</label>
+    <select id="tentType" onchange="toggleProductSelection()">
+        <option value="standard">Standard</option>
+        <option value="magaslabas">Magaslábas</option>
+        <option value="fix">5x5 Sátor</option>
+        <option value="padlos">Padlós</option>
+		<option value="padlossator">Padlós Sátor</option>
+    </select>
+
+    <label for="product">Válassz egy sátrat:</label>
+    <select id="product">
+        <option value="">-- Válassz --</option>
+        <option value="50 négyzetméteres sátor">50 négyzetméteres sátor</option>
+        <option value="100 négyzetméteres sátor">100 négyzetméteres sátor</option>
+        <option value="150 négyzetméteres sátor">150 négyzetméteres sátor</option>
+    </select>
+
+    <label for="quantity">Mennyiség:</label>
+    <input type="number" id="quantity" value="1" min="1">
+
+    <button class="add-button" onclick="addTent()">Hozzáadás</button>
+
+    <h2>Sátor lista</h2>
+    <ul id="tentList"></ul>
+
+    <button onclick="calculate()">Összesítés</button>
+
+    <h2 id="result"></h2>
+
+    <script>
+        const tents = [];
+
+        function toggleProductSelection() {
+            const tentType = document.getElementById('tentType').value;
+            const productSelect = document.getElementById('product');
+            productSelect.disabled = (tentType === 'fix');
+        }
+
+        function addTent() {
+            const tentType = document.getElementById('tentType').value;
+            const selectedProduct = document.getElementById('product').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
+
+            if (tentType !== 'fix' && !selectedProduct) {
+                alert("Kérlek válassz egy sátrat!");
+                return;
+            }
+
+            const tentData = {
+                id: Date.now(),
+                tentType,
+                values: tentType === 'fix' ? ['4', '4', '1', '4', '0', '1', '0', '0', '0', '0', '0', '0', '0'] : selectedProduct.split(','),
+                size: tentType === 'fix' ? '5x5 Sátor' : selectedProduct.split(',').pop(),
+                quantity
+            };
+
+            tents.push(tentData);
+            updateTentList();
+        }
+
+        function updateTentList() {
+            const tentList = document.getElementById('tentList');
+            tentList.innerHTML = '';
+
+            tents.forEach(tent => {
+                const listItem = document.createElement('li');
+                  listItem.textContent = `${tent.size} (${tent.tentType === 'magaslabas' ? 'Magaslábas' : tent.tentType === 'fix' ? 'Fix típus' : tent.tentType === 'padlos' ? 'Padlós' : tent.tentType === 'padlossator' ? 'Padlós Sátor' : 'Standard'}) - ${tent.quantity} db`;
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Eltávolítás';
+                removeButton.classList.add('remove-button');
+                removeButton.onclick = () => removeTent(tent.id);
+
+                listItem.appendChild(removeButton);
+                tentList.appendChild(listItem);
+            });
+        }
+
+        function removeTent(id) {
+            const index = tents.findIndex(tent => tent.id === id);
+            if (index !== -1) tents.splice(index, 1);
+            updateTentList();
+        }
+
+        function calculate() {
+            let totalG = 0, totalL = 0, totalC = 0, totalZ = 0, totalX = 0;
+            let totalY = 0, totalV = 0, totalM = 0, totalK = 0, totalN = 0;
+            let totalJ = 0, totalH = 0, totalD = 0;
+			let totalzAlcsi = 0, totalBAlcsi = 0, totalzkAlcsi = 0;
+			let totalSimaToldo = 0, totalPockosToldo = 0;
+            let total5x5Gerinc = 0, total5x5Lab = 0, total5x5Konyok = 0, totalCsakany = 0, totalKup = 0, totalNut = 0;
+            let totalAlcsi = 0, totalZarszelveny = 0, totalPockosKezdo = 0, totalSimaKezdo = 0 , totalSimaVegzaroVas = 0,totalPockosVegzaroVas = 0, totalSzeldeszka = 0, totalVitorla = 0, totalFogasFa = 0;
+			let totalGerinc = 0, totalLab = 0, totalFogasPiszka = 0, totalParkany = 0, totalTalp =0, totalKozepsoTalp = 0, totalKozebsoLab = 0, total90Konyok = 0, total120Konyok = 0;
+			let totalMagasLab = 0, totalKozebsoMagasLab = 0;
+			let totalAndras = 0, totalDrotkotel = 0, totalTetoponyva = 0, totalOldadl = 0, total3Szogponyva = 0; 
+			let totalCovek = 0;
+			let totalPadlosTalp = 0, totalAnya = 0, totalApa = 0;
+            let fixTentSelected = false;
+
+            tents.forEach(tent => {
+                const [g, l, c, z, x, y, v, m, k, n, j, h, d] = tent.values.map(Number);
+                const quantity = tent.quantity;
+				//Sima
+				if (tent.tentType==='standard' && tent.size==='50 négyzetméteres sátor'){
+				totalGerinc += 4 * quantity;
+				totalLab += 4 * quantity;
+				totalFogasPiszka += 1 * quantity;
+				totalParkany += 2 * quantity;
+				totalTalp += 4 * quantity;
+				totalKozepsoTalp += 2 * quantity;
+				totalKozebsoLab += 2 * quantity;
+				total90Konyok += 4 * quantity;
+				total120Konyok += 2 * quantity;
+				
+				totalAndras += 4 * quantity;
+				totalDrotkotel += 2 * quantity;
+				totalTetoponyva += 1 * quantity; 
+				totalOldadl += 3 * quantity;
+				total3Szogponyva += 1 * quantity;
+				
+				
+				
+				}
+				if (tent.tentType==='standard' && tent.size==='100 négyzetméteres sátor'){
+				totalGerinc += 6 * quantity;
+				totalLab += 6 * quantity;
+				totalFogasPiszka += 2 * quantity;
+				totalParkany += 4 * quantity;
+				totalTalp += 6 * quantity;
+				totalKozepsoTalp += 2 * quantity;
+				totalKozebsoLab += 2 * quantity;
+				total90Konyok += 6 * quantity;
+				total120Konyok += 3 * quantity;
+				
+				totalAndras += 4 * quantity;
+				totalDrotkotel += 2 * quantity;
+				totalTetoponyva += 2 * quantity; 
+				totalOldadl += 4 * quantity;
+				total3Szogponyva += 1 * quantity;
+				
+				
+				
+				
+				}
+				if (tent.tentType==='standard' && tent.size==='150 négyzetméteres sátor'){
+				totalGerinc += 8 * quantity;
+				totalLab += 8 * quantity;
+				totalFogasPiszka += 3 * quantity;
+				totalParkany += 6 * quantity;
+				totalTalp += 8 * quantity;
+				totalKozepsoTalp += 2 * quantity;
+				totalKozebsoLab += 2 * quantity;
+				total90Konyok += 8 * quantity;
+				total120Konyok += 4 * quantity;
+				
+				totalAndras += 4 * quantity;
+				totalDrotkotel += 2 * quantity;
+				totalTetoponyva += 3 * quantity; 
+				totalOldadl += 5 * quantity;
+				total3Szogponyva += 1 * quantity;
+				
+				
+				
+				
+				}
+				
+				//Magas
+				
+				if (tent.tentType==='magaslabas' && tent.size==='50 négyzetméteres sátor'){
+				totalGerinc += 4 * quantity;
+				totalMagasLab += 4 * quantity;
+				totalFogasPiszka += 1 * quantity;
+				totalParkany += 2 * quantity;
+				totalTalp += 4 * quantity;
+				totalKozepsoTalp += 2 * quantity;
+				totalKozebsoMagasLab += 2 * quantity;
+				total90Konyok += 4 * quantity;
+				total120Konyok += 2 * quantity;
+				
+				totalAndras += 4 * quantity;
+				totalDrotkotel += 2 * quantity;
+				totalTetoponyva += 1 * quantity; 
+				totalOldadl += 3 * quantity;
+				total3Szogponyva += 1 * quantity;
+				
+				
+				}
+				
+				
+				if (tent.tentType==='magaslabas' && tent.size==='100 négyzetméteres sátor'){
+				totalGerinc += 6 * quantity;
+				totalMagasLab += 6 * quantity;
+				totalFogasPiszka += 2 * quantity;
+				totalParkany += 4 * quantity;
+				totalTalp += 6 * quantity;
+				totalKozepsoTalp += 2 * quantity;
+				totalKozebsoMagasLab += 2 * quantity;
+				total90Konyok += 6 * quantity;
+				total120Konyok += 3 * quantity;
+				
+				totalAndras += 4 * quantity;
+				totalDrotkotel += 2 * quantity;
+				totalTetoponyva += 2 * quantity; 
+				totalOldadl += 4 * quantity;
+				total3Szogponyva += 1 * quantity;
+				
+				
+				
+				
+				}
+				
+				if (tent.tentType==='magaslabas' && tent.size==='150 négyzetméteres sátor'){
+				totalGerinc += 8 * quantity;
+				totalMagasLab += 8 * quantity;
+				totalFogasPiszka += 3 * quantity;
+				totalParkany += 6 * quantity;
+				totalTalp += 8 * quantity;
+				totalKozepsoTalp += 2 * quantity;
+				totalKozebsoMagasLab += 2 * quantity;
+				total90Konyok += 8 * quantity;
+				total120Konyok += 4 * quantity;
+				
+				
+				totalAndras += 4 * quantity;
+				totalDrotkotel += 2 * quantity;
+				totalTetoponyva += 3 * quantity; 
+				totalOldadl += 5 * quantity;
+				total3Szogponyva += 1 * quantity;
+				
+				
+				
+				
+				}
+				
+				//Padlos
+				
+                if (tent.tentType === 'padlos' && tent.size === '50 négyzetméteres sátor') {
+					totalzAlcsi += 1 * quantity;
+                    totalAlcsi += 4 * quantity;
+					totalZarszelveny += 8 * quantity;
+					totalPockosKezdo += 3 * quantity;
+					totalSimaKezdo += 4 * quantity;
+					totalSimaVegzaroVas += 4 * quantity;
+					totalPockosVegzaroVas += 3 * quantity;
+					totalSzeldeszka += 1 * quantity;
+					totalVitorla += 4 * quantity;
+					totalFogasFa += 10 * quantity;
+					
+                } else if (tent.tentType === 'fix') {
+                    fixTentSelected = true;
+                    total5x5Gerinc += 4 * quantity;
+                    total5x5Lab += 4 * quantity;
+                    total5x5Konyok += 4 * quantity;
+                    totalCsakany += 1 * quantity;
+                    totalKup += 1 * quantity;
+                    totalNut += 1 * quantity;
+                } else {
+                    totalG += g * quantity;
+                    totalL += l * quantity;
+                    totalC += c * quantity;
+                    totalZ += z * quantity;
+                    totalX += x * quantity;
+                    totalY += y * quantity;
+                    totalV += v * quantity;
+                    totalM += m * quantity;
+                    totalK += k * quantity;
+                    totalN += n * quantity;
+                    totalJ += j * quantity;
+                    totalH += h * quantity;
+                    totalD += d * quantity;
+                }
+				
+				
+			
+					
+					
+				if (tent.tentType === 'padlos' && tent.size === '100 négyzetméteres sátor') {
+					totalzAlcsi += 1 * quantity;
+                    totalAlcsi += 6 * quantity;
+					totalZarszelveny += 16 * quantity;
+					totalPockosKezdo += 3 * quantity;
+					totalSimaKezdo += 4 * quantity;
+					totalSimaVegzaroVas += 4 * quantity;
+					totalPockosVegzaroVas += 3 * quantity;
+					totalSzeldeszka += 2 * quantity;
+					totalVitorla += 6 * quantity;
+					totalFogasFa += 20 * quantity;
+					totalSimaToldo += 4 * quantity; 
+					totalPockosToldo += 3 * quantity;
+					totalzkAlcsi += 1 * quantity;
+					
+					
+					}
+					
+					
+				if (tent.tentType === 'padlos' && tent.size === '150 négyzetméteres sátor') {
+					totalzAlcsi += 1 * quantity;
+                    totalAlcsi += 8 * quantity;
+					totalZarszelveny += 24 * quantity;
+					totalPockosKezdo += 3 * quantity;
+					totalSimaKezdo += 4 * quantity;
+					totalSimaVegzaroVas += 4 * quantity;
+					totalPockosVegzaroVas += 3 * quantity;
+					totalSzeldeszka += 3 * quantity;
+					totalVitorla += 8 * quantity;
+					totalFogasFa += 30 * quantity;
+					totalSimaToldo += 8 * quantity; 
+					totalPockosToldo += 6 * quantity;
+					totalzkAlcsi += 1 * quantity;
+					
+					
+					}
+					
+					
+				//Padlos Sátor
+					
+				if (tent.tentType==='padlossator' && tent.size=== '50 négyzetméteres sátor') {
+				
+				totalGerinc += 4 * quantity;
+				totalLab += 4 * quantity;
+				totalFogasPiszka += 1 * quantity;
+				totalParkany += 2 * quantity;
+				totalPadlosTalp += 4 * quantity;
+					totalAnya += 1 * quantity;
+						totalApa += 1 * quantity;
+				totalKozebsoLab += 2 * quantity;
+				total90Konyok += 4 * quantity;
+				total120Konyok += 2 * quantity;
+					
+					totalzAlcsi += 4 * quantity;
+					totalAlcsi += 4 * quantity;
+					totalZarszelveny += 8 * quantity;
+					totalPockosKezdo += 3 * quantity;
+					totalSimaKezdo += 4 * quantity;
+					totalSimaVegzaroVas += 4 * quantity;
+					totalPockosVegzaroVas += 3 * quantity;
+					totalSzeldeszka += 1 * quantity;
+					totalVitorla += 4 * quantity;
+					totalFogasFa += 10 * quantity;
+					
+					
+					totalAndras += 4 * quantity;
+				totalDrotkotel += 2 * quantity;
+				totalTetoponyva += 1 * quantity; 
+				totalOldadl += 3 * quantity;
+				total3Szogponyva += 1 * quantity;
+				
+				
+				
+				}
+				if (tent.tentType==='padlossator' && tent.size=== '100 négyzetméteres sátor') {
+				
+				totalGerinc += 6 * quantity;
+				totalLab += 6 * quantity;
+				totalFogasPiszka += 2 * quantity;
+				totalParkany += 4 * quantity;
+				totalPadlosTalp += 6 * quantity;
+					totalApa += 1 * quantity;
+					totalAnya += 1 * quantity;
+				totalKozebsoLab += 2 * quantity;
+				total90Konyok += 6 * quantity;
+				total120Konyok += 3 * quantity;
+				
+					
+					totalAlcsi += 6 * quantity;
+					totalZarszelveny += 16 * quantity;
+					totalPockosKezdo += 3 * quantity;
+					totalSimaKezdo += 4 * quantity;
+					totalSimaVegzaroVas += 4 * quantity;
+					totalPockosVegzaroVas += 3 * quantity;
+					totalSzeldeszka += 2 * quantity;
+					totalVitorla += 6 * quantity;
+					totalFogasFa += 20 * quantity;
+					totalSimaToldo += 4 * quantity; 
+					totalPockosToldo += 3 * quantity;
+					totalzkAlcsi += 1 * quantity;
+					totalzAlcsi += 1 * quantity;
+					
+					
+					totalAndras += 4 * quantity;
+				totalDrotkotel += 2 * quantity;
+				totalTetoponyva += 2 * quantity; 
+				totalOldadl += 4 * quantity;
+				total3Szogponyva += 1 * quantity;
+				
+				
+				}
+				if (tent.tentType==='padlossator' && tent.size=== '150 négyzetméteres sátor') {
+				
+						totalGerinc += 8 * quantity;
+						totalLab += 8 * quantity;
+						totalFogasPiszka += 3 * quantity;
+						totalParkany += 6 * quantity;
+						totalPadlosTalp += 8 * quantity;
+						totalAnya += 1 * quantity;
+							totalApa += 1 * quantity;
+						totalKozebsoLab += 2 * quantity;
+						total90Konyok += 8 * quantity;
+						total120Konyok += 4 * quantity;
+							
+					
+					totalAlcsi += 8 * quantity;
+					totalZarszelveny += 24 * quantity;
+					totalPockosKezdo += 3 * quantity;
+					totalSimaKezdo += 4 * quantity;
+					totalSimaVegzaroVas += 4 * quantity;
+					totalPockosVegzaroVas += 3 * quantity;
+					totalSzeldeszka += 3 * quantity;
+					totalVitorla += 8 * quantity;
+					totalFogasFa += 30 * quantity;
+					totalSimaToldo += 8 * quantity; 
+					totalPockosToldo += 6 * quantity;
+					totalzkAlcsi += 1 * quantity;
+					totalzAlcsi += 1 * quantity;
+					
+					
+								
+								totalAndras += 4 * quantity;
+							totalDrotkotel += 2 * quantity;
+							totalTetoponyva += 3 * quantity; 
+							totalOldadl += 5 * quantity;
+							total3Szogponyva += 1 * quantity;
+							
+				
+				}
+            });
+				
+				//Kiírás :p
+				
+				
+            let resultText = `Szükséges elemek:\n`;
+           
+
+            if (fixTentSelected) {
+             
+                resultText += `5x5 Gerinc: ${total5x5Gerinc} db\n`;
+                resultText += `5x5 Láb: ${total5x5Lab} db\n`;
+                resultText += `5x5 Könyök: ${total5x5Konyok} db\n`;
+                resultText += `Csákány: ${totalCsakany} db\n`;
+                resultText += `Kúp: ${totalKup} db\n`;
+                resultText += `Nút: ${totalNut} db\n`;
+            }
+
+            
+			if (totalzAlcsi > 0) {
+           
+                resultText += `Alcsi: ${totalAlcsi} db\n`;
+				resultText += `Zárszelvény: ${totalZarszelveny} db\n`;
+				resultText += `Pöckös Kezdő: ${totalPockosKezdo} db\n`;
+				resultText += `Sima Kezdő: ${totalSimaKezdo} db\n`;
+				resultText += `Sima Végzáró Vas: ${totalSimaVegzaroVas} db\n`;
+				resultText += `Pöckös Végzáró Vas: ${totalPockosVegzaroVas} db\n`;
+				resultText += `Széldeszka: ${totalSzeldeszka} db\n`;
+				resultText += `Vitorla: ${totalVitorla} db\n`;
+				resultText += `Fogás Fa: ${totalFogasFa} db\n`;
+				
+				
+				
+				
+            }
+			
+			
+			if (totalzkAlcsi > 0) {
+           
+                
+				resultText += `Sima Toldó: ${totalSimaToldo} db\n`;
+				resultText += `Pöckös Toldó: ${totalPockosToldo} db\n`;
+				
+				
+				
+            }
+			if (total120Konyok > 0) {
+			resultText += `Gerinc: ${totalGerinc} db\n`;
+			
+			resultText += `Fogás Piszka: ${totalFogasPiszka} db\n`;
+			resultText += `Párkány: ${totalParkany} db\n`;
+			resultText += `90-es Könyök: ${total90Konyok} db\n`;
+			resultText += `120-as Könyök: ${total120Konyok} db\n`;
+			
+			}
+			
+			if (totalKozebsoMagasLab > 0){
+			resultText += `Magas Láb: ${totalMagasLab} db\n`;
+			resultText += `Magas Középsőláb: ${totalKozebsoMagasLab} db\n`;
+			
+			
+			
+			
+			
+			}
+			if (totalTalp > 0) {
+			resultText += `Talp: ${totalTalp} db\n`;
+			resultText += `Középsőtalp: ${totalKozepsoTalp} db\n`;
+			
+			
+			}
+			
+			 if (totalLab > 0) {
+			 resultText += `Sima Láb: ${totalLab} db\n`;
+			 resultText += `Középsőláb: ${totalKozebsoLab} db\n`;
+			 
+			 
+			 }
+			 //a 3szög szimbólum
+			 const triangleSymbol = String.fromCharCode(9651);
+			 
+			if (totalAndras > 0) {
+			resultText += `András: ${totalAndras} db\n`;
+			resultText += `Fogás Drótkötél: ${totalDrotkotel} db\n`;
+			resultText += `Tetőponyva: ${totalTetoponyva} db\n`;
+			resultText += `Fogás Oldalponyva: ${totalOldadl} db\n`;
+			resultText += `${triangleSymbol} Ponyva: ${total3Szogponyva} db\n`;
+			
+			
+			}
+			
+			totalCovek = totalTalp + totalKozepsoTalp + total5x5Gerinc + totalPadlosTalp + totalAnya + totalApa;
+			
+			if (totalCovek > 0) {
+			resultText += `Cövek: ${totalCovek} db\n`;
+			
+			
+			
+			}
+			
+			
+			
+			if (totalAnya > 0) {
+			resultText += `Anya Talp: ${totalAnya} db\n`;
+			resultText += `Apa Talp: ${totalApa} db\n`;
+			resultText += `Sátor Talp: ${totalPadlosTalp} db\n`;
+			
+			}
+
+            document.getElementById('result').innerText = resultText;
+        }
+    </script>
+</body>
+</html>
