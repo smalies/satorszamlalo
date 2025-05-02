@@ -115,7 +115,7 @@
             let total5x5Gerinc = 0, total5x5Lab = 0, total5x5Konyok = 0, totalCsakany = 0, totalKup = 0, totalNut = 0; total5x5teto = 0; total5x5oldal = 0;
             let totalAlcsi = 0, totalZarszelveny = 0, totalPockosKezdo = 0, totalSimaKezdo = 0 , totalSimaVegzaroVas = 0,totalPockosVegzaroVas = 0, totalSzeldeszka = 0, totalVitorla = 0, totalFogasFa = 0;
 			let totalGerinc = 0, totalLab = 0, totalFogasPiszka = 0, totalParkany = 0, totalTalp =0, totalKozepsoTalp = 0, totalKozebsoLab = 0, total90Konyok = 0, total120Konyok = 0;
-			let totalMagasLab = 0, totalKozebsoMagasLab = 0;
+			let totalMagasLab = 0, totalKozebsoMagasLab = 0, totalMAndras = 0, totalMOldadl = 0;
 			let totalAndras = 0, totalDrotkotel = 0, totalTetoponyva = 0, totalOldadl = 0, total3Szogponyva = 0; 
 			let totalCovek = 0;
 			let totalPadlosTalp = 0, totalAnya = 0, totalApa = 0;
@@ -351,11 +351,14 @@
 				totalKozebsoMagasLab += 2 * quantity;
 				total90Konyok += 4 * quantity;
 				total120Konyok += 2 * quantity;
+				totalMAndras += 4 * quantity;
+				totalVegponyvaTarto += 4 * quantity;
 				
-				totalAndras += 4 * quantity;
+				
+				
 				totalDrotkotel += 2 * quantity;
 				totalTetoponyva += 1 * quantity; 
-				totalOldadl += 3 * quantity;
+				totalMOldadl += 3 * quantity;
 				total3Szogponyva += 1 * quantity;
 				
 				
@@ -372,11 +375,13 @@
 				totalKozebsoMagasLab += 2 * quantity;
 				total90Konyok += 6 * quantity;
 				total120Konyok += 3 * quantity;
+				totalMAndras += 4 * quantity;
+				totalVegponyvaTarto += 4 * quantity;
 				
-				totalAndras += 4 * quantity;
+				
 				totalDrotkotel += 2 * quantity;
 				totalTetoponyva += 2 * quantity; 
-				totalOldadl += 4 * quantity;
+				totalMOldadl += 4 * quantity;
 				total3Szogponyva += 1 * quantity;
 				
 				
@@ -394,12 +399,14 @@
 				totalKozebsoMagasLab += 2 * quantity;
 				total90Konyok += 8 * quantity;
 				total120Konyok += 4 * quantity;
+				totalMAndras += 4 * quantity;
+				totalVegponyvaTarto += 4 * quantity;
 				
 				
-				totalAndras += 4 * quantity;
+				
 				totalDrotkotel += 2 * quantity;
 				totalTetoponyva += 3 * quantity; 
-				totalOldadl += 5 * quantity;
+				totalMOldadl += 5 * quantity;
 				total3Szogponyva += 1 * quantity;
 				
 				
@@ -503,6 +510,7 @@
 				totalKozebsoLab += 2 * quantity;
 				total90Konyok += 4 * quantity;
 				total120Konyok += 2 * quantity;
+				totalVegponyvaTarto += 4 * quantity;
 					
 					totalzAlcsi += 4 * quantity;
 					totalAlcsi += 4 * quantity;
@@ -537,6 +545,7 @@
 				totalKozebsoLab += 2 * quantity;
 				total90Konyok += 6 * quantity;
 				total120Konyok += 3 * quantity;
+				totalVegponyvaTarto += 4 * quantity;
 				
 					
 					totalAlcsi += 6 * quantity;
@@ -574,6 +583,7 @@
 						totalKozebsoLab += 2 * quantity;
 						total90Konyok += 8 * quantity;
 						total120Konyok += 4 * quantity;
+				totalVegponyvaTarto += 4 * quantity;
 							
 					
 					totalAlcsi += 8 * quantity;
@@ -685,15 +695,31 @@
 			 //a 3szög szimbólum
 			 const triangleSymbol = String.fromCharCode(9651);
 			 
-			if (totalAndras > 0) {
-			resultText += `András: ${totalAndras} db\n`;
+			if (totalDrotkotel > 0) {
 			resultText += `Fogás Drótkötél: ${totalDrotkotel} db\n`;
 			resultText += `Tetőponyva: ${totalTetoponyva} db\n`;
-			resultText += `Fogás Oldalponyva: ${totalOldadl} db\n`;
 			resultText += `${triangleSymbol} Ponyva: ${total3Szogponyva} db\n`;
+			}
 			
+			if (totalMOldadl > 0) {
+			resultText +=`Fogás 3M Oldalponyva: ${totalMOldadl} db\n`;
+			}
+			
+			if (totalOldadl > 0) {
+			resultText += `Fogás Oldalponyva: ${totalOldadl} db\n`;
+			}
+			
+			
+			if (totalMAndras > 0){
+			resultText += `Hosszú András: ${totalMAndras} db\n`;
 			
 			}
+			if (totalAndras > 0) {
+			resultText += `András: ${totalAndras} db\n`;
+			}
+			
+			
+			
 			
 			totalCovek = totalTalp + totalKozepsoTalp + total5x5Gerinc + totalPadlosTalp + totalAnya + totalApa;
 			
