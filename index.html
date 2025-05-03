@@ -73,16 +73,23 @@
 
 <!-- Fő modális ablak -->
 <div class="custom-modal" id="mainModal">
-  <h3>Válassz egy UI-t</h3>
-  <button onclick="openSubUI('ui1')">UI 1</button>
-  <button onclick="openSubUI('ui2')">UI 2</button>
-  <button onclick="openSubUI('ui3')">UI 3</button>
+  <h3>Válassz az alábbiak közül</h3>
+  <button onclick="openSubUI('ui1')"> Sátor </button>
+  <button onclick="openSubUI('ui2')"> Padló </button>
+  <button onclick="openSubUI('ui3')"> 5x5 </button>
 <button onclick="closeAll()">❌ Bezárás</button>
 </div>
 
 <!-- Al UI-k -->
 <div class="custom-modal custom-sub-ui" id="ui1">
-  <h3>Ez az UI 1</h3>
+  <h3>  
+  <ul>
+    <li>Piszkavas</li>
+    <li>Létra</li>
+    <li>Kalapács</li>
+    <li>Cövekhúzó</li>
+    <li>Sasszeg</li>
+  </ul>
   <button onclick="backToMain()">Vissza</button>
 </div>
 
