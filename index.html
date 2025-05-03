@@ -1351,9 +1351,13 @@
             });
 				
 				//Kiírás :p
+
 				
-				
-            let resultText = `Szükséges elemek:\n`;
+            let resultText = ` `;
+				if (totalzAlcsi > 0 || total5x5Gerinc > 0 || total120Konyok > 0)
+{
+		resultText += `Szükséges elemek: \n`;
+}
            
 
             if (fixTentSelected) {
